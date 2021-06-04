@@ -1,0 +1,163 @@
+Index: lib/main.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'package:flutter/material.dart';\r\nimport 'package:flutter_app/pages/counter.page.dart';\r\nimport 'package:flutter_app/pages/home.page.dart';\r\nimport 'package:flutter_app/pages/users.page.dart';\r\n\r\nvoid main(){\r\n  runApp(MyApp());\r\n}\r\n\r\nclass MyApp extends StatelessWidget {\r\n\r\n  @override\r\n  Widget build(BuildContext context) {\r\n    return MaterialApp(\r\n      routes: {\r\n        \"/\":(context)=>HomePage(),\r\n        \"/counter\":(context)=>CounterPage(),\r\n        \"/users\":(context)=>UsersPage()\r\n      },\r\n      theme: ThemeData(\r\n        primarySwatch: Colors.deepOrange,\r\n        textTheme: TextTheme(\r\n          bodyText2: TextStyle(fontSize: 30,color: Colors.deepOrange)\r\n        )\r\n      ),\r\n    );\r\n  }\r\n}\r\n\r\n\r\n  \r\n  \r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/main.dart	(revision 267672ac5cb98b5daac466321a0a6a04557a21e2)
++++ lib/main.dart	(date 1622756751915)
+@@ -2,6 +2,7 @@
+ import 'package:flutter_app/pages/counter.page.dart';
+ import 'package:flutter_app/pages/home.page.dart';
+ import 'package:flutter_app/pages/users.page.dart';
++import 'package:flutter_app/pages/weather.page.dart';
+ 
+ void main(){
+   runApp(MyApp());
+@@ -13,7 +14,8 @@
+   Widget build(BuildContext context) {
+     return MaterialApp(
+       routes: {
+-        "/":(context)=>HomePage(),
++        // "/":(context)=>HomePage(), Temporary modification for developement
++        "/":(context)=>WeatherPage(),
+         "/counter":(context)=>CounterPage(),
+         "/users":(context)=>UsersPage()
+       },
+Index: lib/pages/weather-details.page.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/pages/weather-details.page.dart	(date 1622828967773)
++++ lib/pages/weather-details.page.dart	(date 1622828967773)
+@@ -0,0 +1,65 @@
++import 'dart:convert';
++import 'package:flutter/material.dart';
++import 'package:http/http.dart' as http;
++
++class WeatherDetails extends StatefulWidget {
++  String city;
++
++  WeatherDetails(this.city);
++
++  @override
++  _WeatherDetailsState createState() => _WeatherDetailsState();
++}
++
++class _WeatherDetailsState extends State<WeatherDetails> {
++
++  var weatherData;
++
++  @override
++  void initState() {
++    super.initState();
++    // print("initState");
++    getWeather(widget.city);
++  }
++
++  getWeather(String city){
++    // http://api.openweathermap.org/data/2.5/weather?q={city%20name}&appid={API%20key}
++    // apiKey =
++
++    print("getWeather");
++
++    String url = "https://samples.openweathermap.org/data/2.5/forecast?q=${city}&appid=b6907d289e10d714a6e88b30761fae22";
++    http.get(Uri.parse(url))
++        .then((response){
++          // print(response.body);
++          this.weatherData = jsonDecode(response.body);
++        }).catchError((error){
++          print(error);
++    });
++  }
++
++  @override
++  Widget build(BuildContext context) {
++    return Scaffold(
++      appBar: AppBar(
++        title: Text('Weather of ${widget.city}'),
++        backgroundColor: Colors.deepOrange,
++      ),
++      body: (weatherData == null ?
++      Center(child: CircularProgressIndicator(),) : 
++      ListView.builder(itemCount: (weatherData == null ? 0 : weatherData['list'].length), itemBuilder: (context,index){
++        return Card(
++          child: Row(
++            children: <Widget>[
++              CircleAvatar(
++                backgroundImage: AssetImage("Images/"),
++              ),
++              Text(weatherData['list'][index]['dt'], style: TextStyle(fontSize: 22),),
++              Text(weatherData['list'][index]['dt']['tmp']),
++            ],
++          ),
++        );
++      }))
++    );
++  }
++}
+Index: lib/pages/weather.page.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/pages/weather.page.dart	(date 1622823628384)
++++ lib/pages/weather.page.dart	(date 1622823628384)
+@@ -0,0 +1,55 @@
++import 'package:flutter/material.dart';
++import 'package:flutter_app/pages/weather-details.page.dart';
++import 'package:flutter_app/widgets/drawer.widget.dart';
++
++class WeatherPage extends StatefulWidget {
++  @override
++  _WeatherPageState createState() => _WeatherPageState();
++}
++
++class _WeatherPageState extends State<WeatherPage> {
++
++  String city = "";
++
++  @override
++  Widget build(BuildContext context) {
++    return Scaffold(
++        appBar: AppBar(
++          backgroundColor: Colors.deepOrange,
++          title: Text(city),
++        ),
++        body: Column(
++            children: <Widget>[
++        Container(
++        child: Padding(
++          padding: EdgeInsets.all(8.0),
++          child: TextField(
++              decoration: InputDecoration(hintText: "City"),
++              onChanged: (value) {
++                setState(() {
++                  this.city = value;
++                });
++              }),
++          ),
++        ),
++        Container(
++          width: double.infinity,
++          child: Padding(
++            padding: const EdgeInsets.all(8.0),
++            child: RaisedButton(
++              color: Colors.deepOrange,
++              textColor: Colors.white,
++              onPressed: () {
++                Navigator.push(context, MaterialPageRoute(builder: (context) => WeatherDetails(city)));
++              },
++              child: Text('Get weater..', style: TextStyle(fontSize: 22, color: Colors.white)),
++            ),
++          )
++        )
++    ]
++    ,
++    )
++    ,
++    );
++  }
++}

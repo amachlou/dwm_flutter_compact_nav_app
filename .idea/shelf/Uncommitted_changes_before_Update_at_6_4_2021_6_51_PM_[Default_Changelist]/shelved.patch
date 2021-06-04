@@ -1,0 +1,20 @@
+Index: lib/global/global.parameter.dart
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import 'package:flutter/material.dart';\r\n\r\nclass GlobalParameters{\r\n  static final menus=[\r\n    {\r\n      \"title\":\"Home\",\r\n      \"route\":\"/\",\r\n      \"icon\":Icon(Icons.home)\r\n    },\r\n    {\r\n      \"title\":\"Counter\",\r\n      \"route\":\"/counter\",\r\n      \"icon\":Icon(Icons.add_box_rounded)\r\n    },\r\n    {\r\n      \"title\":\"Users\",\r\n      \"route\":\"/users\",\r\n      \"icon\":Icon(Icons.contacts)\r\n    },\r\n    {\r\n      \"title\":\"Meteo\",\r\n      \"route\":\"/meteo\",\r\n      \"icon\":Icon(Icons.wb_sunny)\r\n    },\r\n    {\r\n      \"title\":\"Gallery\",\r\n      \"route\":\"/gallery\",\r\n      \"icon\":Icon(Icons.image_rounded)\r\n    }\r\n\r\n  ];\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- lib/global/global.parameter.dart	(revision 267672ac5cb98b5daac466321a0a6a04557a21e2)
++++ lib/global/global.parameter.dart	(date 1622755991341)
+@@ -18,8 +18,8 @@
+       "icon":Icon(Icons.contacts)
+     },
+     {
+-      "title":"Meteo",
+-      "route":"/meteo",
++      "title":"Weather",
++      "route":"/weather",
+       "icon":Icon(Icons.wb_sunny)
+     },
+     {
